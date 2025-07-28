@@ -43,11 +43,11 @@ While this script was created mainly for personal use, it is shared here to show
 1. Ensure you have `rclone` configured with your desired cloud remotes.  
    Example: setting up Box remote named `Box`, Google Drive named `Google`, etc.
 
-2. Place the script file somewhere on your system, e.g., `~/scripts/cloudsync.sh`.
+2. Place the script file somewhere on your system, e.g., `~/scripts/cloudsync`.
 
 3. Make the script executable:
 
-`chmod +x cloudsync.sh`
+`chmod +x cloudsync`
 
 
 4. Run the script directly, or create an alias or cron job to automate backups.
@@ -58,7 +58,7 @@ While this script was created mainly for personal use, it is shared here to show
 
 Run the script:
 
-`./cloudsync.sh`
+`./cloudsync`
 
 The script will:
 
