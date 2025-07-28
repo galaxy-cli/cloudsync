@@ -20,7 +20,7 @@ install_rclone() {
     fi
 }
 
-echo -e "${C_GREEN}Welcome to the KeePassXC Cloud Sync Script!${C_RESET}"
+echo -e "${C_GREEN}Welcome to the CLI cloud synchronization script${C_RESET}"
 
 # Check if rclone is installed
 if ! command -v rclone &> /dev/null; then
@@ -94,4 +94,4 @@ for INDEX in "${SELECTED[@]}"; do
     echo
 done
 
-echo -e "${C_GREEN}Cloud sync completed.${C_RESET}"
+echo -e "${C_GREEN}Synchronization completed.${C_RESET}"
