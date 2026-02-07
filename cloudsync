@@ -10,7 +10,7 @@
 # Project: https://github.com/galaxy-cli/tts
 
 # Alias
-# alias cloudsyncd='printf "Google Drive\n"; rclone ls Google\ Drive:; printf "\nMEGA\n"; r>
+# alias cloudsyncd='printf "Google Drive\n"; rclone ls Google\ Drive:; printf \nMEGA\n:; printf "\npCloud\n"; rclone ls pCloud:'
 
 # --- CONFIGURATION ---
 # The single source for everything (KeePassXC, Cryptomator Vault, etc.)
