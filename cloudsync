@@ -14,7 +14,7 @@
 SOURCE_DIR="$HOME/Backup"
 
 # Your cloud remotes (must match 'rclone config' names)
-REMOTES=("google" "mega" "pcloud")
+REMOTES=("Google Drive" "MEGA" "pCloud")
 
 # Archive/Versioning Logic
 TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
@@ -23,6 +23,7 @@ TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
 if ! command -v rclone &> /dev/null; then
     echo "rclone not found. Installing now..."
     curl https://rclone.org/install.sh | sudo bash
+    sudo rclone selfupdate --beta 
 fi
 
 # --- PRE-FLIGHT CHECK ---
