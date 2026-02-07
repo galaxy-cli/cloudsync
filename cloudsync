@@ -1,97 +1,56 @@
-
 #!/bin/bash
 
-# Color codes
-C_RESET="\033[0m"
-C_GREEN="\033[0;32m"
-C_BLUE="\033[0;34m"
-C_YELLOW="\033[1;33m"
-C_RED="\033[0;31m"
+# --- CONFIGURATION ---
+# The single source for everything (KeePassXC, Cryptomator Vault, etc.)
+SOURCE_DIR="$HOME/Backup"
 
-# Function to install rclone
-install_rclone() {
-    echo -e "\n${C_BLUE}Installing rclone...${C_RESET}"
-    curl https://rclone.org/install.sh | sudo bash
-    if command -v rclone &> /dev/null; then
-        echo -e "${C_GREEN}[✓] rclone installed successfully.${C_RESET}"
-    else
-        echo -e "${C_RED}[✗] rclone installation failed. Exiting.${C_RESET}"
-        exit 1
-    fi
-}
+# Your cloud remotes (must match 'rclone config' names)
+REMOTES=("google" "mega" "pcloud")
 
-echo -e "${C_GREEN}Welcome to the CLI cloud synchronization script${C_RESET}"
+# Archive/Versioning Logic
+TIMESTAMP=$(date +%Y-%m-%d_%H%M%S)
 
-# Check if rclone is installed
+# --- DEPENDENCY CHECK ---
 if ! command -v rclone &> /dev/null; then
-    echo -e "${C_YELLOW}[!] rclone is not installed on your system.${C_RESET}"
-    read -p "Would you like to install rclone now? [Y/n] " INSTALL_RCLONE
-    case "$INSTALL_RCLONE" in
-        [Yy]* | "" ) install_rclone ;;
-        * )
-            echo -e "${C_RED}rclone is required. Exiting script.${C_RESET}"
-            exit 1
-            ;;
-    esac
+    echo "rclone not found. Installing now..."
+    curl https://rclone.org/install.sh | sudo bash
 fi
 
-# Prompt for file or folder path to upload
-read -e -p "Enter the full path to the file or folder you want to upload: " SRC_PATH
-
-# Validate source path
-if [[ -f "$SRC_PATH" ]]; then
-    ITEM_TYPE="file"
-elif [[ -d "$SRC_PATH" ]]; then
-    ITEM_TYPE="directory"
-else
-    echo -e "${C_YELLOW}[!] The path you entered is not a valid file or directory: $SRC_PATH${C_RESET}"
+# --- PRE-FLIGHT CHECK ---
+if [ ! -d "$SOURCE_DIR" ]; then
+    echo "Error: Source directory $SOURCE_DIR not found!"
+    echo "Please create it or update the SOURCE_DIR variable in this script."
     exit 1
 fi
 
-# Prompt for cloud destination
-echo -e "\n${C_BLUE}Choose where to sync your $ITEM_TYPE:${C_RESET}"
-echo "1) Box"
-echo "2) Google Drive"
-echo "3) Koofr"
-echo "4) MEGA"
-echo "5) pCloud"
-echo "6) All of the above"
-read -p "Enter your choice (e.g., 1 3 5 or 6): " CHOICES
+# --- EXECUTION ---
+echo "Starting CloudSync at $(date)"
+echo "---------------------------------------------------------"
 
-# Define known remotes
-declare -A REMOTES=(
-    [1]="Box:"
-    [2]="Google:"
-    [3]="Koofr:"
-    [4]="MEGA:"
-    [5]="pCloud:"
-)
-
-IFS=' ' read -r -a SELECTED <<< "$CHOICES"
-
-if [[ " ${SELECTED[*]} " =~ " 6 " ]]; then
-    SELECTED=(1 2 3 4 5)
-fi
-
-echo ""
-
-# Sync to selected remotes
-for INDEX in "${SELECTED[@]}"; do
-    DEST="${REMOTES[$INDEX]}"
-    if [[ -z "$DEST" ]]; then
-        echo -e "${C_YELLOW}[!] Skipping invalid option: $INDEX${C_RESET}"
+for REMOTE in "${REMOTES[@]}"; do
+    # Check if the remote is actually configured in rclone
+    if ! rclone listremotes | grep -q "^$REMOTE:"; then
+        echo "[SKIP] Remote '$REMOTE' not configured. Skipping..."
         continue
     fi
 
-    echo -e "${C_BLUE}Syncing $ITEM_TYPE to $DEST...${C_RESET}"
-    rclone copy "$SRC_PATH" "$DEST" --progress
+    echo "Syncing to $REMOTE..."
 
-    if [[ $? -eq 0 ]]; then
-        echo -e "${C_GREEN}[✓] Successfully synced to $DEST${C_RESET}"
+    # SYNC COMMAND
+    # --backup-dir moves deleted/changed cloud files to an 'Archive' folder
+    # so you never actually lose data if you delete something locally by mistake.
+    rclone sync "$SOURCE_DIR" "$REMOTE:Backup/Current" \
+        --backup-dir "$REMOTE:Backup/Archive/$TIMESTAMP" \
+        --progress \
+        --stats-one-line \
+        --fast-list  # Optimizes for many files (good for Cryptomator)
+
+    if [ $? -eq 0 ]; then
+        echo "[SUCCESS] $REMOTE sync complete."
     else
-        echo -e "${C_YELLOW}[✗] Failed to sync to $DEST${C_RESET}"
+        echo "[ERROR] $REMOTE sync encountered an issue."
     fi
-    echo
+    echo "---------------------------------------------------------"
 done
 
-echo -e "${C_GREEN}Synchronization completed.${C_RESET}"
+echo "All tasks finished at $(date)."
