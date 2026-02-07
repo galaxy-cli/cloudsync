@@ -9,6 +9,9 @@
 # Author: galaxy-cli
 # Project: https://github.com/galaxy-cli/tts
 
+# Alias
+# alias cloudsyncd='printf "Google Drive\n"; rclone ls Google\ Drive:; printf "\nMEGA\n"; r>
+
 # --- CONFIGURATION ---
 # The single source for everything (KeePassXC, Cryptomator Vault, etc.)
 SOURCE_DIR="$HOME/Backup"
