@@ -1,4 +1,13 @@
 #!/bin/bash
+#       _                 _                      
+#   ___| | ___  _   _  __| |___ _   _ _ __   ___ 
+#  / __| |/ _ \| | | |/ _` / __| | | | '_ \ / __|
+# | (__| | (_) | |_| | (_| \__ \ |_| | | | | (__ 
+#  \___|_|\___/ \__,_|\__,_|___/\__, |_| |_|\___|
+#                               |___/            
+# cloudsync - A simple Bash script to securely and selectively sync files to cloud services using rclone
+# Author: galaxy-cli
+# Project: https://github.com/galaxy-cli/tts
 
 # --- CONFIGURATION ---
 # The single source for everything (KeePassXC, Cryptomator Vault, etc.)
