@@ -12,7 +12,6 @@ cloudsync is a powerful CLI utility designed to automate the management of impor
  * Automated Setup: Checks for rclone and handles installation or updates if missing.
  * Colored Output: Uses formatted status messages to clearly indicate successes, skips, or errors.
 
-<<<<<<< HEAD
 ### Prerequisites
  * Environment: Bash shell on Linux, macOS, or WSL.
  * rclone: Must be installed and configured with your desired cloud remotes (e.g., drive, mega, s3).
@@ -65,7 +64,6 @@ While this script was created mainly for personal use, it is shared here to show
 4. Run the script directly, or create an alias or cron job to automate backups.
 
 ---
->>>>>>> 0f50fdc62f9eab2527f312df98bd95cc62b58a75
 
 ## Usage
 The script now relies on flags for all operations. Running the script without arguments or with -h will display the help menu.
@@ -98,7 +96,6 @@ The script now relies on flags for all operations. Running the script without ar
 - Create a new directory across all your services:
 `cloudsync --make-dir -c "Google Drive,MEGA,pCloud" -d "NewProjects/2024"`
 
-<<<<<<< HEAD
 - Remove a file and verify with Verbose mode:
 `cloudsync --remove -v -c "MEGA" -d "NewProjects/2024/old_file.txt"`
 =======
@@ -109,7 +106,6 @@ The script now relies on flags for all operations. Running the script without ar
    - Option to sync to all remotes in one go.
 
 ---
->>>>>>> 0f50fdc62f9eab2527f312df98bd95cc62b58a75
 
 ## License
 This project is licensed under the MIT License.

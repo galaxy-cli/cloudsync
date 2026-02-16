@@ -5,7 +5,6 @@
 # | (__| | (_) | |_| | (_| \__ \ |_| | | | | (__ 
 #  \___|_|\___/ \__,_|\__,_|___/\__, |_| |_|\___|
 #                               |___/            
-<<<<<<< HEAD
 # cloudsync - Dynamic & Verbose Cloud File Manager using rclone
 # Author: galaxy-cli
 
@@ -206,4 +205,3 @@ for REMOTE in "${REMOTES[@]}"; do
 done
 
 echo "All tasks finished at $(date)."
->>>>>>> 0f50fdc62f9eab2527f312df98bd95cc62b58a75
