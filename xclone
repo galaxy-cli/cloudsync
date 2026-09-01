@@ -1,22 +1,36 @@
 #!/bin/bash
-#             _                  
-#   __  _____| | ___  _ __   ___ 
+#             _
+#   __  _____| | ___  _ __   ___
 #   \ \/ / __| |/ _ \| '_ \ / _ \
 #    >  < (__| | (_) | | | |  __/
 #   /_/\_\___|_|\___/|_| |_|\___|
-#                                
+#
 # xclone - A high-utility multi-remote wrapper for native rclone operations.
 #
 # Project: https://github.com/galaxy-cli/xclone
 
 PROGRAM_NAME="${0##*/}"
-VERSION="2.5.0"
+VERSION="2.5.1"
 
-# --- SYSTEM DEPENDENCY RUNTIME CHECK ---
-if ! command -v rclone &>/dev/null; then
-    echo "[-] Error: 'rclone' command not found." >&2
-    echo "[*] Please install it via your package manager: sudo apt install rclone" >&2
-    exit 1
+# --- DEPENDENCY CHECK ---
+missing=()
+for cmd in rclone; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        missing+=("$cmd")
+    fi
+done
+
+if [ "${#missing[@]}" -gt 0 ]; then
+    echo "${PROGRAM_NAME}: missing required dependencies: ${missing[*]}" >&2
+    read -rp "Would you like to install them via apt? [Y/n] " yn
+    yn=${yn:-Y}
+
+    if [[ $yn =~ ^[Yy]$ ]]; then
+        sudo apt install -y "${missing[@]}"
+    else
+        echo "${PROGRAM_NAME}: cannot continue without required dependencies" >&2
+        exit 1
+    fi
 fi
 
 # --- USAGE HELPER ---
